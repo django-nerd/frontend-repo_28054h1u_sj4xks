@@ -7,7 +7,7 @@ const Hero = () => {
     <section className="relative w-full min-h-[100vh] overflow-hidden">
       {/* 3D Cover */}
       <div className="absolute inset-0">
-        <Spline scene="https://prod.spline.design/yji5KWXyD-xKVkWj/scene.splinecode" style={{ width: '100%', height: '100%' }} />
+        <Spline scene="https://prod.spline.design/VyGeZv58yuk8j7Yy/scene.splinecode" style={{ width: '100%', height: '100%' }} />
       </div>
 
       {/* Overlays to ensure readability without blocking interaction */}

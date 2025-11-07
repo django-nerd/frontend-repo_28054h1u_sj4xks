@@ -35,30 +35,50 @@ const ThemeToggle = () => {
 
 const Header = () => {
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState('');
 
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth >= 1024) setOpen(false);
     };
+    const onScroll = () => {
+      const sections = Array.from(document.querySelectorAll('section[id]'));
+      let current = '';
+      for (const sec of sections) {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top <= 120 && rect.bottom >= 120) {
+          current = sec.id;
+          break;
+        }
+      }
+      setActive(current);
+    };
     window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => {
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('scroll', onScroll);
+    };
   }, []);
 
   const nav = [
-    { href: '#about', label: 'About' },
-    { href: '#pricing', label: 'Pricing' },
-    { href: '#committee', label: 'Committee' },
-    { href: '#hyderabad', label: 'Hyderabad' },
-    { href: '#register', label: 'Register' },
+    { href: '#about', id: 'about', label: 'About' },
+    { href: '#interactive-3d', id: 'interactive-3d', label: '3D' },
+    { href: '#speakers', id: 'speakers', label: 'Speakers' },
+    { href: '#agenda', id: 'agenda', label: 'Agenda' },
+    { href: '#pricing', id: 'pricing', label: 'Pricing' },
+    { href: '#hyderabad', id: 'hyderabad', label: 'Hyderabad' },
+    { href: '#register', id: 'register', label: 'Register' },
   ];
 
   return (
-    <header className="fixed top-0 inset-x-0 z-40">
+    <header className="fixed top-2 inset-x-0 z-40">
       <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="mx-4 mt-4 rounded-2xl border border-slate-200/60 dark:border-white/10 bg-white/70 dark:bg-[#0b0f1a]/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-[#0b0f1a]/60"
+        className="mx-4 rounded-2xl border border-slate-200/60 dark:border-white/10 bg-white/70 dark:bg-[#0b0f1a]/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-[#0b0f1a]/60"
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <a href="#" className="flex items-center gap-2">
@@ -69,9 +89,13 @@ const Header = () => {
             </div>
           </a>
 
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-2">
             {nav.map((n) => (
-              <a key={n.href} href={n.href} className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-cyan-600 dark:hover:text-cyan-400 transition">
+              <a
+                key={n.href}
+                href={n.href}
+                className={`text-sm font-medium rounded-full px-3 py-1 transition ${active===n.id ? 'bg-cyan-600 text-white' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10'}`}
+              >
                 {n.label}
               </a>
             ))}
@@ -120,7 +144,7 @@ const Header = () => {
               </div>
               <div className="mt-6 space-y-2">
                 {nav.map((n) => (
-                  <a key={n.href} href={n.href} onClick={() => setOpen(false)} className="block rounded-lg px-3 py-2 text-slate-800 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-white/10">
+                  <a key={n.href} href={n.href} onClick={() => setOpen(false)} className={`block rounded-lg px-3 py-2 ${active===n.id ? 'bg-cyan-600 text-white' : 'text-slate-800 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-white/10'}`}>
                     {n.label}
                   </a>
                 ))}
